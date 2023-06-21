@@ -209,9 +209,10 @@ def generate_html(entry_waiting_time, beacon_entering, exit_waiting_time, beacon
 		f.write(html_content)
 
 
-entry_waiting_time, entry_waiting_time_days, beacon_entering, active_validators, current_churn, entry_churn = estimate_entry_waiting_time()
-exit_waiting_time, exit_waiting_time_days, beacon_exiting, exit_churn = estimate_exit_waiting_time()
-eth_supply, amount_eth_staked, percent_eth_staked, staking_apr = network_data()
-historical_data = update_historical_data()
+if __name__ == "__main__":
+	entry_waiting_time, entry_waiting_time_days, beacon_entering, active_validators, current_churn, entry_churn = estimate_entry_waiting_time()
+	exit_waiting_time, exit_waiting_time_days, beacon_exiting, exit_churn = estimate_exit_waiting_time()
+	eth_supply, amount_eth_staked, percent_eth_staked, staking_apr = network_data()
+	historical_data = update_historical_data()
 
-generate_html(entry_waiting_time, beacon_entering, exit_waiting_time, beacon_exiting, active_validators, current_churn, amount_eth_staked, percent_eth_staked, staking_apr, historical_data)
+	generate_html(entry_waiting_time, beacon_entering, exit_waiting_time, beacon_exiting, active_validators, current_churn, amount_eth_staked, percent_eth_staked, staking_apr, historical_data)
