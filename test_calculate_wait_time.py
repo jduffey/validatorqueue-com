@@ -15,8 +15,29 @@ scaling = [0, 327680, 393216, 458752, 524288, 589824, 655360, 720896, 786432, 85
     [524288, '8 minutes', 0.005555555555555556, 7, 8.0, 0.005555555555555556],
     [589824, '7 minutes', 0.00494212962962963, 8, 9.0, 0.0049382716049382715],
 ])
-def test_calculate_wait_time(validator_count, expected0, expected1, expected2, expected3, expected4):
+def test_calculate_wait_time_small_queue(validator_count, expected0, expected1, expected2, expected3, expected4):
     queue_length = 10
+
+    formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
+        validator_count, queue_length)
+
+    assert formatted_wait_time == expected0
+    assert waiting_time_days_raw == expected1
+    assert current_churn == expected2
+    assert ave_churn == expected3
+    assert churn_time_days == expected4
+
+
+@pytest.mark.parametrize("validator_count, expected0, expected1, expected2, expected3, expected4", [
+    [0, '12 days, 8 hours', 12.345, 9, 4.0, 12.345],
+    [327680, '10 days, 23 hours', 10.973333333333333, 4, 5.0, 10.973333333333333],
+    [393216, '9 days, 3 hours', 9.144444444444444, 5, 6.0, 9.144444444444444],
+    [458752, '7 days, 20 hours', 7.838090277777778, 6, 7.0, 7.838095238095238],
+    [524288, '6 days, 21 hours', 6.858333333333333, 7, 8.0, 6.858333333333333],
+    [589824, '6 days, 2 hours', 6.0962962962962965, 8, 9.0, 6.0962962962962965],
+])
+def test_calculate_wait_time_big_queue(validator_count, expected0, expected1, expected2, expected3, expected4):
+    queue_length = 12345
 
     formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
         validator_count, queue_length)
