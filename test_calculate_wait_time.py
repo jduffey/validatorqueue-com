@@ -8,6 +8,27 @@ scaling = [0, 327680, 393216, 458752, 524288, 589824, 655360, 720896, 786432, 85
 
 
 @pytest.mark.parametrize("validator_count, expected0, expected1, expected2, expected3, expected4", [
+    [0, '0 minutes', 0.0, 9, 9, 0],
+    [327680, '0 minutes', 0.0, 4, 4, 0],
+    [393216, '0 minutes', 0.0, 5, 5, 0],
+    [458752, '0 minutes', 0.0, 6, 6, 0],
+    [524288, '0 minutes', 0.0, 7, 7, 0],
+    [589824, '0 minutes', 0.0, 8, 8, 0],
+])
+def test_calculate_wait_time_no_queue(validator_count, expected0, expected1, expected2, expected3, expected4):
+    queue_length = 0
+
+    formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
+        validator_count, queue_length)
+
+    assert formatted_wait_time == expected0
+    assert waiting_time_days_raw == expected1
+    assert current_churn == expected2
+    assert ave_churn == expected3
+    assert churn_time_days == expected4
+
+
+@pytest.mark.parametrize("validator_count, expected0, expected1, expected2, expected3, expected4", [
     [0, '14 minutes', 0.01, 9, 4.0, 0.01],
     [327680, '13 minutes', 0.008888888888888889, 4, 5.0, 0.008888888888888889],
     [393216, '11 minutes', 0.007407407407407408, 5, 6.0, 0.007407407407407408],
