@@ -1,5 +1,4 @@
 import requests
-# import os
 import math
 import time
 import json
@@ -13,24 +12,7 @@ from partials.historical_charts import historical_charts
 from partials.footer import footer
 
 
-# queue_endpoint = "https://beaconcha.in/api/v1/validators/queue"
-# queue_data = requests.get(queue_endpoint).json()["data"]
-# epoch_endpoint = "https://mainnet.beaconcha.in/api/v1/epoch/finalized"
-# epoch_data = requests.get(epoch_endpoint).json()["data"]
-# apr_endpoint = "https://beaconcha.in/api/v1/ethstore/latest"
-# apr_data = requests.get(apr_endpoint).json()["data"]
-# supply_endpoint = "https://ultrasound.money/api/v2/fees/supply-over-time"
-# supply_data = requests.get(supply_endpoint).json()
-
-# last_updated = time.time()
-
-# beacon_entering = queue_data["beaconchain_entering"]
-# beacon_exiting = queue_data["beaconchain_exiting"]
-# active_validators = queue_data["validatorscount"]
-
 def estimate_entry_waiting_time(active_validator_count, beacon_entering):
-    # churn_limit = max(4, active_validators // 65536)
-
     entry_waiting_time, entry_waiting_time_days, current_churn, entry_churn, _ = calculate_wait_time(
         active_validator_count, beacon_entering)
 
@@ -38,8 +20,6 @@ def estimate_entry_waiting_time(active_validator_count, beacon_entering):
 
 
 def estimate_exit_waiting_time(active_validators, beacon_exiting):
-    # churn_limit = max(4, active_validators // 65536)
-
     exit_waiting_time, exit_waiting_time_days, _, exit_churn, _ = calculate_wait_time(
         active_validators, beacon_exiting)
 
@@ -118,9 +98,6 @@ def calculate_wait_time(active_validators, queue):
 
     waiting_time_seconds = round(churn_time_days * 86400)
 
-    # waiting_time_months = math.floor(waiting_time_seconds // 2592000)
-    # waiting_time_months_days = round( (waiting_time_seconds % 2592000)/2592000*30 )
-
     waiting_time_days = math.floor(waiting_time_seconds // 86400)
     waiting_time_days_hours = round((waiting_time_seconds % 86400)/86400*24)
 
@@ -129,14 +106,6 @@ def calculate_wait_time(active_validators, queue):
 
     waiting_time_days_raw = waiting_time_seconds / 86400
 
-    # if waiting_time_months > 0:
-    #   months_text = "months"
-    #   days_text = "days"
-    #   if waiting_time_months == 1:
-    #       months_text = "month"
-    #   if waiting_time_months_days == 1:
-    #       days_text = "day"
-    #   formatted_wait_time = f"""{waiting_time_months} {months_text}, {waiting_time_months_days} {days_text}"""
     if waiting_time_days > 0:
         days_text = "days"
         hours_text = "hours"
@@ -236,7 +205,8 @@ if __name__ == "__main__":
         active_validators_MAIN, beacon_exiting_MAIN)
     eth_supply, amount_eth_staked, percent_eth_staked, staking_apr = network_data(
         supply_data_MAIN, epoch_data_MAIN, apr_data_MAIN)
-    historical_data = update_historical_data('historical_data.json', active_validators_MAIN, beacon_entering_MAIN, beacon_exiting_MAIN)
+    historical_data = update_historical_data(
+        'historical_data.json', active_validators_MAIN, beacon_entering_MAIN, beacon_exiting_MAIN)
 
     html_content = generate_html(
         last_updated_MAIN,
