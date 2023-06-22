@@ -12,16 +12,16 @@ from partials.historical_charts import historical_charts
 from partials.footer import footer
 
 
-def estimate_entry_waiting_time(active_validator_count, beacon_entering):
+def estimate_entry_waiting_time(active_validator_count, beacon_entering, current_churn):
     entry_waiting_time, entry_waiting_time_days, current_churn, entry_churn, _ = calculate_wait_time(
-        active_validator_count, beacon_entering)
+        active_validator_count, beacon_entering, current_churn)
 
     return entry_waiting_time, entry_waiting_time_days, beacon_entering, active_validator_count, current_churn, entry_churn
 
 
-def estimate_exit_waiting_time(active_validators, beacon_exiting):
+def estimate_exit_waiting_time(active_validators, beacon_exiting, current_churn):
     exit_waiting_time, exit_waiting_time_days, _, exit_churn, _ = calculate_wait_time(
-        active_validators, beacon_exiting)
+        active_validators, beacon_exiting, current_churn)
 
     return exit_waiting_time, exit_waiting_time_days, beacon_exiting, exit_churn
 
@@ -39,7 +39,7 @@ def network_data(supply_data, epoch_data, apr_data):
     return eth_supply, amount_eth_staked, percent_eth_staked, staking_apr
 
 
-def calculate_wait_time(active_validators, queue):
+def calculate_wait_time(active_validators, queue, current_churn):
     # different active validator levels and corresponding churn
     scaling = [0, 327680, 393216, 458752, 524288, 589824, 655360, 720896, 786432, 851968, 917504, 983040, 1048576, 1114112, 1179648, 1245184, 1310720, 1376256, 1441792, 1507328,
                1572864, 1638400, 1703936, 1769472, 1835008, 1900544, 1966080, 2031616, 2097152, 2162688, 2228224, 2293760, 2359296, 2424832, 2490368, 2555904, 2621440, 2686976, 2752512]
@@ -47,7 +47,7 @@ def calculate_wait_time(active_validators, queue):
                    23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42]
     day_churn = [1000, 1125, 1350, 1575, 1800, 2025, 2250, 2475, 2700, 2925, 3150, 3375, 3600, 3825, 4050, 4275, 4500, 4725, 4950,
                  5175, 5400, 5625, 5850, 6075, 6300, 6525, 6750, 6975, 7200, 7425, 7650, 7875, 8100, 8325, 8550, 8775, 9000, 9225, 9450]
-    current_churn = 9
+
     churn_time_days = 0
     churn_factor = 0
 
@@ -199,10 +199,12 @@ if __name__ == "__main__":
     beacon_exiting_MAIN = queue_data_MAIN["beaconchain_exiting"]
     active_validators_MAIN = queue_data_MAIN["validatorscount"]
 
+    current_churn_MAIN = 9
+
     entry_waiting_time, entry_waiting_time_days, beacon_entering_MAIN, active_validators_MAIN, current_churn, entry_churn = estimate_entry_waiting_time(
-        active_validators_MAIN, beacon_entering_MAIN)
+        active_validators_MAIN, beacon_entering_MAIN, current_churn_MAIN)
     exit_waiting_time, exit_waiting_time_days, beacon_exiting_MAIN, exit_churn = estimate_exit_waiting_time(
-        active_validators_MAIN, beacon_exiting_MAIN)
+        active_validators_MAIN, beacon_exiting_MAIN, current_churn_MAIN)
     eth_supply, amount_eth_staked, percent_eth_staked, staking_apr = network_data(
         supply_data_MAIN, epoch_data_MAIN, apr_data_MAIN)
     historical_data = update_historical_data(

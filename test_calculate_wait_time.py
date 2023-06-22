@@ -4,7 +4,7 @@ from build import calculate_wait_time
 
 
 # scaling = [0, 327680, 393216, 458752, 524288, 589824, 655360, 720896, 786432, 851968, 917504, 983040, 1048576, 1114112, 1179648, 1245184, 1310720, 1376256, 1441792, 1507328,
-        #    1572864, 1638400, 1703936, 1769472, 1835008, 1900544, 1966080, 2031616, 2097152, 2162688, 2228224, 2293760, 2359296, 2424832, 2490368, 2555904, 2621440, 2686976, 2752512]
+#    1572864, 1638400, 1703936, 1769472, 1835008, 1900544, 1966080, 2031616, 2097152, 2162688, 2228224, 2293760, 2359296, 2424832, 2490368, 2555904, 2621440, 2686976, 2752512]
 
 
 @pytest.mark.parametrize("validator_count, expected0, expected1, expected2, expected3, expected4", [
@@ -30,7 +30,7 @@ def test_calculate_wait_time_no_queue(validator_count, expected0, expected1, exp
     queue_length = 0
 
     formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
-        validator_count, queue_length)
+        validator_count, queue_length, current_churn=9)
 
     assert formatted_wait_time == expected0
     assert waiting_time_days_raw == expected1
@@ -62,8 +62,7 @@ def test_calculate_wait_time_small_queue(validator_count, expected0, expected1, 
     queue_length = 10
 
     formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
-        validator_count, queue_length)
-    print(validator_count, calculate_wait_time(validator_count, queue_length))
+        validator_count, queue_length, current_churn=9)
 
     assert formatted_wait_time == expected0
     assert waiting_time_days_raw == expected1
@@ -95,7 +94,7 @@ def test_calculate_wait_time_big_queue(validator_count, expected0, expected1, ex
     queue_length = 12345
 
     formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
-        validator_count, queue_length)
+        validator_count, queue_length, current_churn=9)
 
     assert formatted_wait_time == expected0
     assert waiting_time_days_raw == expected1
