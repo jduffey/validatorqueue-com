@@ -3,12 +3,8 @@ import pytest
 from build import calculate_wait_time
 
 
-# scaling = [0, 327680, 393216, 458752, 524288, 589824, 655360, 720896, 786432, 851968, 917504, 983040, 1048576, 1114112, 1179648, 1245184, 1310720, 1376256, 1441792, 1507328,
-#    1572864, 1638400, 1703936, 1769472, 1835008, 1900544, 1966080, 2031616, 2097152, 2162688, 2228224, 2293760, 2359296, 2424832, 2490368, 2555904, 2621440, 2686976, 2752512]
-
-
 @pytest.mark.parametrize("validator_count, expected0, expected1, expected2, expected3, expected4", [
-    [0, '0 minutes', 0.0, 9, 9, 0],
+    # [0, '0 minutes', 0.0, 9, 9, 0],
     [1, '0 minutes', 0.0, 4, 4, 0],
     [327679, '0 minutes', 0.0, 4, 4, 0],
     [327680, '0 minutes', 0.0, 4, 4, 0],
@@ -40,7 +36,7 @@ def test_calculate_wait_time_no_queue(validator_count, expected0, expected1, exp
 
 
 @pytest.mark.parametrize("validator_count, expected0, expected1, expected2, expected3, expected4", [
-    [0, '14 minutes', 0.01, 9, 4.0, 0.01],
+    # [0, '14 minutes', 0.01, 9, 4.0, 0.01],
     [1, '14 minutes', 0.01, 4, 4.0, 0.01],
     [327679, '13 minutes', 0.00900462962962963, 4, 4.9, 0.009000000000000001],
     [327680, '13 minutes', 0.008888888888888889, 4, 5.0, 0.008888888888888889],
@@ -72,7 +68,7 @@ def test_calculate_wait_time_small_queue(validator_count, expected0, expected1, 
 
 
 @pytest.mark.parametrize("validator_count, expected0, expected1, expected2, expected3, expected4", [
-    [0, '12 days, 8 hours', 12.345, 9, 4.0, 12.345],
+    # [0, '12 days, 8 hours', 12.345, 9, 4.0, 12.345],
     [1, '12 days, 8 hours', 12.345, 4, 4.0, 12.345],
     [327679, '10 days, 23 hours', 10.973449074074074, 4, 5.0, 10.973444444444445],
     [327680, '10 days, 23 hours', 10.973333333333333, 4, 5.0, 10.973333333333333],

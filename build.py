@@ -39,18 +39,7 @@ def network_data(supply_data, epoch_data, apr_data):
     return eth_supply, amount_eth_staked, percent_eth_staked, staking_apr
 
 
-def calculate_wait_time(active_validators, queue, current_churn):
-    # different active validator levels and corresponding churn
-    scaling = [0, 327680, 393216, 458752, 524288, 589824, 655360, 720896, 786432, 851968, 917504, 983040, 1048576, 1114112, 1179648, 1245184, 1310720, 1376256, 1441792, 1507328,
-               1572864, 1638400, 1703936, 1769472, 1835008, 1900544, 1966080, 2031616, 2097152, 2162688, 2228224, 2293760, 2359296, 2424832, 2490368, 2555904, 2621440, 2686976, 2752512]
-    epoch_churn = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-                   23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42]
-    day_churn = [1000, 1125, 1350, 1575, 1800, 2025, 2250, 2475, 2700, 2925, 3150, 3375, 3600, 3825, 4050, 4275, 4500, 4725, 4950,
-                 5175, 5400, 5625, 5850, 6075, 6300, 6525, 6750, 6975, 7200, 7425, 7650, 7875, 8100, 8325, 8550, 8775, 9000, 9225, 9450]
-
-    churn_time_days = 0
-    churn_factor = 0
-
+def calculate_churn_values(scaling, epoch_churn, day_churn, active_validators, queue, churn_time_days, churn_factor):
     for i, _ in enumerate(scaling):
         if active_validators > scaling[i]:
             current_churn = epoch_churn[i]
@@ -86,6 +75,21 @@ def calculate_wait_time(active_validators, queue, current_churn):
                     queue_remaining -= (scaling[j+1] - scaling[j])
 
                 j += 1
+
+    return current_churn, churn_time_days, churn_factor
+
+
+def calculate_wait_time(active_validators, queue, current_churn):
+    # different active validator levels and corresponding churn
+    scaling = [0, 327680, 393216, 458752, 524288, 589824, 655360, 720896, 786432, 851968, 917504, 983040, 1048576, 1114112, 1179648, 1245184, 1310720, 1376256, 1441792, 1507328,
+               1572864, 1638400, 1703936, 1769472, 1835008, 1900544, 1966080, 2031616, 2097152, 2162688, 2228224, 2293760, 2359296, 2424832, 2490368, 2555904, 2621440, 2686976, 2752512]
+    epoch_churn = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+                   23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42]
+    day_churn = [1000, 1125, 1350, 1575, 1800, 2025, 2250, 2475, 2700, 2925, 3150, 3375, 3600, 3825, 4050, 4275, 4500, 4725, 4950,
+                 5175, 5400, 5625, 5850, 6075, 6300, 6525, 6750, 6975, 7200, 7425, 7650, 7875, 8100, 8325, 8550, 8775, 9000, 9225, 9450]
+
+    current_churn, churn_time_days, churn_factor = calculate_churn_values(
+        scaling, epoch_churn, day_churn, active_validators, queue, churn_time_days=0, churn_factor=0)
 
     if (queue > 0):
         ave_churn = round(churn_factor / queue * 100) / 100
