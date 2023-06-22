@@ -7,17 +7,22 @@ scaling = [0, 327680, 393216, 458752, 524288, 589824, 655360, 720896, 786432, 85
            1572864, 1638400, 1703936, 1769472, 1835008, 1900544, 1966080, 2031616, 2097152, 2162688, 2228224, 2293760, 2359296, 2424832, 2490368, 2555904, 2621440, 2686976, 2752512]
 
 
-@pytest.mark.parametrize("validator_count, expected", [
-    [0, ('14 minutes', 0.01, 9, 4.0, 0.01)],
-    [327680, ('13 minutes', 0.008888888888888889, 4, 5.0, 0.008888888888888889)],
-    [393216, ('11 minutes', 0.007407407407407408, 5, 6.0, 0.007407407407407408)],
-    [458752, ('9 minutes', 0.006354166666666667, 6, 7.0, 0.006349206349206349)],
-    [524288, ('8 minutes', 0.005555555555555556, 7, 8.0, 0.005555555555555556)],
-    [589824, ('7 minutes', 0.00494212962962963, 8, 9.0, 0.0049382716049382715)],
+@pytest.mark.parametrize("validator_count, expected0, expected1, expected2, expected3, expected4", [
+    [0, '14 minutes', 0.01, 9, 4.0, 0.01],
+    [327680, '13 minutes', 0.008888888888888889, 4, 5.0, 0.008888888888888889],
+    [393216, '11 minutes', 0.007407407407407408, 5, 6.0, 0.007407407407407408],
+    [458752, '9 minutes', 0.006354166666666667, 6, 7.0, 0.006349206349206349],
+    [524288, '8 minutes', 0.005555555555555556, 7, 8.0, 0.005555555555555556],
+    [589824, '7 minutes', 0.00494212962962963, 8, 9.0, 0.0049382716049382715],
 ])
-def test_calculate_wait_time(validator_count, expected):
+def test_calculate_wait_time(validator_count, expected0, expected1, expected2, expected3, expected4):
     queue_length = 10
 
-    actual = calculate_wait_time(validator_count, queue_length)
+    formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
+        validator_count, queue_length)
 
-    assert actual == expected
+    assert formatted_wait_time == expected0
+    assert waiting_time_days_raw == expected1
+    assert current_churn == expected2
+    assert ave_churn == expected3
+    assert churn_time_days == expected4
