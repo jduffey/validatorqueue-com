@@ -1,5 +1,5 @@
 import requests
-import os
+# import os
 import math
 import time
 import json
@@ -28,9 +28,9 @@ last_updated = time.time()
 def estimate_entry_waiting_time():
 	beacon_entering = queue_data["beaconchain_entering"]
 	active_validators = queue_data["validatorscount"]
-	churn_limit = max(4, active_validators // 65536)
+	# churn_limit = max(4, active_validators // 65536)
 
-	entry_waiting_time, entry_waiting_time_days, current_churn, entry_churn, entry_churn_time_days = calculate_wait_time(active_validators, beacon_entering)
+	entry_waiting_time, entry_waiting_time_days, current_churn, entry_churn, _ = calculate_wait_time(active_validators, beacon_entering)
 
 	return entry_waiting_time, entry_waiting_time_days, beacon_entering, active_validators, current_churn, entry_churn
 
@@ -38,9 +38,9 @@ def estimate_entry_waiting_time():
 def estimate_exit_waiting_time():
 	beacon_exiting = queue_data["beaconchain_exiting"]
 	active_validators = queue_data["validatorscount"]
-	churn_limit = max(4, active_validators // 65536)
+	# churn_limit = max(4, active_validators // 65536)
 
-	exit_waiting_time, exit_waiting_time_days, current_churn, exit_churn, exit_churn_time_days = calculate_wait_time(active_validators, beacon_exiting)
+	exit_waiting_time, exit_waiting_time_days, _, exit_churn, _ = calculate_wait_time(active_validators, beacon_exiting)
 
 	return exit_waiting_time, exit_waiting_time_days, beacon_exiting, exit_churn
 
@@ -60,14 +60,14 @@ def network_data():
 
 def calculate_wait_time(active_validators, queue):
 	# different active validator levels and corresponding churn
-	scaling = [0,327680,393216,458752,524288,589824,    655360,720896,786432,851968,917504,983040,1048576,1114112,1179648,1245184,1310720,1376256,1441792,1507328,1572864,1638400,1703936,1769472,1835008,1900544,1966080,2031616,2097152,2162688,2228224,2293760,2359296,2424832,2490368,2555904,2621440,2686976,2752512]
+	scaling = [0,327680,393216,458752,524288,589824,655360,720896,786432,851968,917504,983040,1048576,1114112,1179648,1245184,1310720,1376256,1441792,1507328,1572864,1638400,1703936,1769472,1835008,1900544,1966080,2031616,2097152,2162688,2228224,2293760,2359296,2424832,2490368,2555904,2621440,2686976,2752512]
 	epoch_churn = [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42]
 	day_churn = [1000,1125,1350,1575,1800,2025,2250,2475,2700,2925,3150,3375,3600,3825,4050,4275,4500,4725,4950,5175,5400,5625,5850,6075,6300,6525,6750,6975,7200,7425,7650,7875,8100,8325,8550,8775,9000,9225,9450]
 	current_churn = 9
 	churn_time_days = 0
 	churn_factor = 0
 	
-	for i, item in enumerate(scaling):
+	for i, _ in enumerate(scaling):
 		if active_validators > scaling[i]:
 			current_churn = epoch_churn[i]
 		if (active_validators >= scaling[i]) and (active_validators < scaling[i+1]):
@@ -111,8 +111,8 @@ def calculate_wait_time(active_validators, queue):
 
 	waiting_time_seconds = round(churn_time_days * 86400)
 
-	waiting_time_months = math.floor(waiting_time_seconds // 2592000)
-	waiting_time_months_days = round( (waiting_time_seconds % 2592000)/2592000*30 )
+	# waiting_time_months = math.floor(waiting_time_seconds // 2592000)
+	# waiting_time_months_days = round( (waiting_time_seconds % 2592000)/2592000*30 )
 
 	waiting_time_days = math.floor(waiting_time_seconds // 86400)
 	waiting_time_days_hours = round( (waiting_time_seconds % 86400)/86400*24 )
@@ -156,8 +156,8 @@ def calculate_wait_time(active_validators, queue):
 	return formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days
 
 
-def update_historical_data():
-	with open('historical_data.json', 'r') as f:
+def update_historical_data(historical_data_json_file):
+	with open(historical_data_json_file, 'r') as f:
 		all_data = json.load(f)
 		date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
 		todays_data =  {
@@ -213,6 +213,6 @@ if __name__ == "__main__":
 	entry_waiting_time, entry_waiting_time_days, beacon_entering, active_validators, current_churn, entry_churn = estimate_entry_waiting_time()
 	exit_waiting_time, exit_waiting_time_days, beacon_exiting, exit_churn = estimate_exit_waiting_time()
 	eth_supply, amount_eth_staked, percent_eth_staked, staking_apr = network_data()
-	historical_data = update_historical_data()
+	historical_data = update_historical_data('historical_data.json')
 
 	generate_html(entry_waiting_time, beacon_entering, exit_waiting_time, beacon_exiting, active_validators, current_churn, amount_eth_staked, percent_eth_staked, staking_apr, historical_data)
