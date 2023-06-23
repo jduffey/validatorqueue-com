@@ -100,14 +100,14 @@ def calculate_wait_time_values(seconds):
     if days > 0:
         days_plural_modifier = "" if days == 1 else "s"
         hours_plural_modifier = "" if days_hours == 1 else "s"
-        formatted_wait_time = f"""{days} day{days_plural_modifier}, {days_hours} hour{hours_plural_modifier}"""
+        formatted_wait_time = f'{days} day{days_plural_modifier}, {days_hours} hour{hours_plural_modifier}'
     elif hours > 0:
         hours_plural_modifier = "" if hours == 1 else "s"
         hours_minutes_plural_modifier = "" if hours_minutes == 1 else "s"
-        formatted_wait_time = f"""{hours} hour{hours_plural_modifier}, {hours_minutes} minute{hours_minutes_plural_modifier}"""
+        formatted_wait_time = f'{hours} hour{hours_plural_modifier}, {hours_minutes} minute{hours_minutes_plural_modifier}'
     else:
         minute_plural_modifier = "" if hours_minutes == 1 else "s"
-        formatted_wait_time = f"""{hours_minutes} minute{minute_plural_modifier}"""
+        formatted_wait_time = f'{hours_minutes} minute{minute_plural_modifier}'
 
     return formatted_wait_time, days_raw
 
