@@ -41,12 +41,12 @@ def network_data(supply_data, epoch_data, apr_data):
 
 def calculate_churn_values(
     scaling,
-        epoch_churn,
-        day_churn,
-        active_validators,
-        queue,
-        churn_time_days,
-        churn_factor
+    epoch_churn,
+    day_churn,
+    active_validators,
+    queue,
+    churn_time_days,
+    churn_factor
 ):
     for i, _ in enumerate(scaling):
         if active_validators > scaling[i]:
@@ -145,18 +145,18 @@ def calculate_wait_time(active_validators, queue, current_churn):
 
 def update_historical_data(
     historical_data_json_file,
-        active_validators,
-        beacon_entering,
-        beacon_exiting,
-        entry_waiting_time_days,
-        exit_waiting_time_days,
-        current_churn,
-        entry_churn,
-        exit_churn,
-        eth_supply,
-        amount_eth_staked,
-        percent_eth_staked,
-        staking_apr
+    active_validators,
+    beacon_entering,
+    beacon_exiting,
+    entry_waiting_time_days,
+    exit_waiting_time_days,
+    current_churn,
+    entry_churn,
+    exit_churn,
+    eth_supply,
+    amount_eth_staked,
+    percent_eth_staked,
+    staking_apr
 ):
     with open(historical_data_json_file, 'r') as f:
         all_data = json.load(f)
@@ -192,16 +192,16 @@ def update_historical_data(
 
 def generate_html(
     last_updated,
-        entry_waiting_time,
-        beacon_entering,
-        exit_waiting_time,
-        beacon_exiting,
-        active_validators,
-        current_churn,
-        amount_eth_staked,
-        percent_eth_staked,
-        staking_apr,
-        historical_data
+    entry_waiting_time,
+    beacon_entering,
+    exit_waiting_time,
+    beacon_exiting,
+    active_validators,
+    current_churn,
+    amount_eth_staked,
+    percent_eth_staked,
+    staking_apr,
+    historical_data
 ):
     html_content = f"""<!DOCTYPE html>
 		<html lang="en">
