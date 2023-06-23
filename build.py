@@ -102,7 +102,6 @@ def calculate_wait_time_values(seconds):
         hours_plural_modifier = "" if days_hours == 1 else "s"
         formatted_wait_time = f"""{days} day{days_plural_modifier}, {days_hours} hour{hours_plural_modifier}"""
     elif hours > 0:
-        raise Exception("No test cases hit this path")
         hours_plural_modifier = "" if hours == 1 else "s"
         hours_minutes_plural_modifier = "" if hours_minutes == 1 else "s"
         formatted_wait_time = f"""{hours} hour{hours_plural_modifier}, {hours_minutes} minute{hours_minutes_plural_modifier}"""

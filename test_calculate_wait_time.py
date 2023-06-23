@@ -54,7 +54,7 @@ def test_calculate_wait_time_no_queue(validator_count, expected0, expected1, exp
     [589824, '7 minutes', 0.00494212962962963, 8, 9.0, 0.0049382716049382715],
     [589825, '7 minutes', 0.00494212962962963, 9, 9.0, 0.0049382716049382715],
 ])
-def test_calculate_wait_time_small_queue(validator_count, expected0, expected1, expected2, expected3, expected4):
+def test_calculate_wait_time_only_minutes(validator_count, expected0, expected1, expected2, expected3, expected4):
     queue_length = 10
 
     formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
@@ -86,11 +86,33 @@ def test_calculate_wait_time_small_queue(validator_count, expected0, expected1, 
     [589824, '6 days, 2 hours', 6.0962962962962965, 8, 9.0, 6.0962962962962965],
     [589825, '6 days, 2 hours', 6.0962962962962965, 9, 9.0, 6.0962962962962965],
 ])
-def test_calculate_wait_time_big_queue(validator_count, expected0, expected1, expected2, expected3, expected4):
+def test_calculate_wait_time_days_and_hours(validator_count, expected0, expected1, expected2, expected3, expected4):
     queue_length = 12345
 
     formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
         validator_count, queue_length, current_churn=9)
+
+    assert formatted_wait_time == expected0
+    assert waiting_time_days_raw == expected1
+    assert current_churn == expected2
+    assert ave_churn == expected3
+    assert churn_time_days == expected4
+
+
+@pytest.mark.parametrize("validator_count, expected0, expected1, expected2, expected3, expected4", [
+    [1, '2 hours, 57 minutes', 0.12299768518518518, 4, 4.0, 0.123],
+    [327679, '2 hours, 38 minutes', 0.10944444444444444, 4, 4.99, 0.10944444444444444],
+    [327680, '2 hours, 37 minutes', 0.1093287037037037, 4, 5.0, 0.10933333333333334],
+    [327681, '2 hours, 37 minutes', 0.1093287037037037, 5, 5.0, 0.10933333333333334],
+])
+def test_calculate_wait_time_hours_and_minutes(validator_count, expected0, expected1, expected2, expected3, expected4):
+    queue_length = 123
+
+    formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days = calculate_wait_time(
+        validator_count, queue_length, current_churn=9)
+
+    print(calculate_wait_time(
+        validator_count, queue_length, current_churn=9))
 
     assert formatted_wait_time == expected0
     assert waiting_time_days_raw == expected1
