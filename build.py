@@ -39,7 +39,15 @@ def network_data(supply_data, epoch_data, apr_data):
     return eth_supply, amount_eth_staked, percent_eth_staked, staking_apr
 
 
-def calculate_churn_values(scaling, epoch_churn, day_churn, active_validators, queue, churn_time_days, churn_factor):
+def calculate_churn_values(
+    scaling,
+        epoch_churn,
+        day_churn,
+        active_validators,
+        queue,
+        churn_time_days,
+        churn_factor
+):
     for i, _ in enumerate(scaling):
         if active_validators > scaling[i]:
             current_churn = epoch_churn[i]
@@ -135,7 +143,21 @@ def calculate_wait_time(active_validators, queue, current_churn):
     return formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days
 
 
-def update_historical_data(historical_data_json_file, active_validators, beacon_entering, beacon_exiting):
+def update_historical_data(
+    historical_data_json_file,
+        active_validators,
+        beacon_entering,
+        beacon_exiting,
+        entry_waiting_time_days,
+        exit_waiting_time_days,
+        current_churn,
+        entry_churn,
+        exit_churn,
+        eth_supply,
+        amount_eth_staked,
+        percent_eth_staked,
+        staking_apr
+):
     with open(historical_data_json_file, 'r') as f:
         all_data = json.load(f)
         date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
@@ -168,7 +190,19 @@ def update_historical_data(historical_data_json_file, active_validators, beacon_
         return all_data
 
 
-def generate_html(last_updated, entry_waiting_time, beacon_entering, exit_waiting_time, beacon_exiting, active_validators, current_churn, amount_eth_staked, percent_eth_staked, staking_apr, historical_data):
+def generate_html(
+    last_updated,
+        entry_waiting_time,
+        beacon_entering,
+        exit_waiting_time,
+        beacon_exiting,
+        active_validators,
+        current_churn,
+        amount_eth_staked,
+        percent_eth_staked,
+        staking_apr,
+        historical_data
+):
     html_content = f"""<!DOCTYPE html>
 		<html lang="en">
 		{head}
@@ -205,27 +239,40 @@ if __name__ == "__main__":
 
     current_churn_MAIN = 9
 
-    entry_waiting_time, entry_waiting_time_days, beacon_entering_MAIN, active_validators_MAIN, current_churn, entry_churn = estimate_entry_waiting_time(
+    entry_waiting_time_MAIN, entry_waiting_time_days_MAIN, beacon_entering_MAIN, active_validators_MAIN, current_churn_MAIN, entry_churn_MAIN = estimate_entry_waiting_time(
         active_validators_MAIN, beacon_entering_MAIN, current_churn_MAIN)
-    exit_waiting_time, exit_waiting_time_days, beacon_exiting_MAIN, exit_churn = estimate_exit_waiting_time(
+    exit_waiting_time_MAIN, exit_waiting_time_days_MAIN, beacon_exiting_MAIN, exit_churn_MAIN = estimate_exit_waiting_time(
         active_validators_MAIN, beacon_exiting_MAIN, current_churn_MAIN)
-    eth_supply, amount_eth_staked, percent_eth_staked, staking_apr = network_data(
+    eth_supply_MAIN, amount_eth_staked_MAIN, percent_eth_staked_MAIN, staking_apr_MAIN = network_data(
         supply_data_MAIN, epoch_data_MAIN, apr_data_MAIN)
-    historical_data = update_historical_data(
-        'historical_data.json', active_validators_MAIN, beacon_entering_MAIN, beacon_exiting_MAIN)
+    historical_data_MAIN = update_historical_data(
+        'historical_data.json',
+        active_validators_MAIN,
+        beacon_entering_MAIN,
+        beacon_exiting_MAIN,
+        entry_waiting_time_days_MAIN,
+        exit_waiting_time_days_MAIN,
+        current_churn_MAIN,
+        entry_churn_MAIN,
+        exit_churn_MAIN,
+        eth_supply_MAIN,
+        amount_eth_staked_MAIN,
+        percent_eth_staked_MAIN,
+        staking_apr_MAIN
+    )
 
     html_content = generate_html(
         last_updated_MAIN,
-        entry_waiting_time,
+        entry_waiting_time_MAIN,
         beacon_entering_MAIN,
-        exit_waiting_time,
+        exit_waiting_time_MAIN,
         beacon_exiting_MAIN,
         active_validators_MAIN,
-        current_churn,
-        amount_eth_staked,
-        percent_eth_staked,
-        staking_apr,
-        historical_data
+        current_churn_MAIN,
+        amount_eth_staked_MAIN,
+        percent_eth_staked_MAIN,
+        staking_apr_MAIN,
+        historical_data_MAIN
     )
 
     with open("public/index.html", "w") as f:
