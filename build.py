@@ -87,6 +87,41 @@ def calculate_churn_values(
     return current_churn, churn_time_days, churn_factor
 
 
+def calculate_wait_time_values(seconds):
+    days = math.floor(seconds // 86400)
+    days_hours = round((seconds % 86400)/86400*24)
+
+    hours = math.floor(seconds // 3600)
+    hours_minutes = round((seconds % 3600)/3600*60)
+
+    formatted_wait_time = ""
+    days_raw = seconds / 86400
+
+    if days > 0:
+        days_text = "days"
+        hours_text = "hours"
+        if days == 1:
+            days_text = "day"
+        if days_hours == 1:
+            hours_text = "hour"
+        formatted_wait_time = f"""{days} {days_text}, {days_hours} {hours_text}"""
+    elif hours > 0:
+        hours_text = "hours"
+        minutes_text = "minutes"
+        if hours == 1:
+            hours_text = "hour"
+        if hours_minutes == 1:
+            minutes_text = "minute"
+        formatted_wait_time = f"""{hours} {hours_text}, {hours_minutes} {minutes_text}"""
+    else:
+        minutes_text = "minutes"
+        if hours_minutes == 1:
+            minutes_text = "minute"
+        formatted_wait_time = f"""{hours_minutes} {minutes_text}"""
+
+    return formatted_wait_time, days_raw
+
+
 def calculate_wait_time(active_validators, queue, current_churn):
     # different active validator levels and corresponding churn
     scaling = [0, 327680, 393216, 458752, 524288, 589824, 655360, 720896, 786432, 851968, 917504, 983040, 1048576, 1114112, 1179648, 1245184, 1310720, 1376256, 1441792, 1507328,
@@ -110,35 +145,8 @@ def calculate_wait_time(active_validators, queue, current_churn):
 
     waiting_time_seconds = round(churn_time_days * 86400)
 
-    waiting_time_days = math.floor(waiting_time_seconds // 86400)
-    waiting_time_days_hours = round((waiting_time_seconds % 86400)/86400*24)
-
-    waiting_time_hours = math.floor(waiting_time_seconds // 3600)
-    waiting_time_hours_minutes = round((waiting_time_seconds % 3600)/3600*60)
-
-    waiting_time_days_raw = waiting_time_seconds / 86400
-
-    if waiting_time_days > 0:
-        days_text = "days"
-        hours_text = "hours"
-        if waiting_time_days == 1:
-            days_text = "day"
-        if waiting_time_days_hours == 1:
-            hours_text = "hour"
-        formatted_wait_time = f"""{waiting_time_days} {days_text}, {waiting_time_days_hours} {hours_text}"""
-    elif waiting_time_hours > 0:
-        hours_text = "hours"
-        minutes_text = "minutes"
-        if waiting_time_hours == 1:
-            hours_text = "hour"
-        if waiting_time_hours_minutes == 1:
-            minutes_text = "minute"
-        formatted_wait_time = f"""{waiting_time_hours} {hours_text}, {waiting_time_hours_minutes} {minutes_text}"""
-    else:
-        minutes_text = "minutes"
-        if waiting_time_hours_minutes == 1:
-            minutes_text = "minute"
-        formatted_wait_time = f"""{waiting_time_hours_minutes} {minutes_text}"""
+    formatted_wait_time, waiting_time_days_raw = calculate_wait_time_values(
+        waiting_time_seconds)
 
     return formatted_wait_time, waiting_time_days_raw, current_churn, ave_churn, churn_time_days
 
