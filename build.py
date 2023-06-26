@@ -208,7 +208,17 @@ def generate_html(
 			{dark_mode_toggle}
 			<div class="container">
 				{header(last_updated)}
-				{overview(entry_waiting_time, beacon_entering, exit_waiting_time, beacon_exiting, current_churn, active_validators, amount_eth_staked, percent_eth_staked, staking_apr)}
+				{overview(
+                    entry_waiting_time,
+                    beacon_entering,
+                    exit_waiting_time,
+                    beacon_exiting,
+                    current_churn,
+                    active_validators,
+                    amount_eth_staked,
+                    percent_eth_staked,
+                    staking_apr
+                )}
 				{faq}
 				{historical_charts}
 				{footer(historical_data)}
